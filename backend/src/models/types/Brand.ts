@@ -2,12 +2,12 @@ import {Model} from 'sequelize';
 
 export interface BrandCreationAttributes{
 	name: string;
-	image: string;
+	imageId: string;
 }
 export interface BrandAttributes{
 	id: string;
 	name: string;
-	image: string;
+	imageId?: string;
 	createdAt?: Date;
 	updatedAt?: Date;
 }

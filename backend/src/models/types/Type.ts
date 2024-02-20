@@ -2,12 +2,12 @@ import {Model} from 'sequelize';
 
 export interface TypeCreationAttributes{
 	name: string;
-	image: string;
+	imageId: string;
 }
 export interface TypeAttributes{
 	id: string;
 	name: string;
-	image: string;
+	imageId?: string;
 	createdAt?: Date;
 	updatedAt?: Date;
 }

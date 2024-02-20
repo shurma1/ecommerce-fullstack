@@ -3,7 +3,7 @@ import {Model} from 'sequelize';
 export interface ProductCreationAttributes{
 	name: string;
 	description: string;
-	image: string;
+	imageId: string;
 	weight: number;
 	height: number;
 	length: number;
@@ -15,7 +15,7 @@ export interface ProductAttributes{
 	id: string;
 	name: string;
 	description: string;
-	image: string;
+	imageId?: string;
 	weight: number;
 	height: number;
 	length: number;

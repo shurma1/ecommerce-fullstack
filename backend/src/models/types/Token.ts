@@ -4,13 +4,14 @@ export interface TokenCreationAttributes{
 	token: string;
 	ip: string;
 	browser: string;
+	userId: string;
 }
 export interface TokenAttributes{
 	id: string;
 	token: string;
 	ip: string;
 	browser: string;
-	userId?: number;
+	userId?: string;
 	createdAt?: Date;
 	updatedAt?: Date;
 }
