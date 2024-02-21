@@ -1,13 +1,14 @@
 import {Sequelize} from 'sequelize';
+import config from 'config';
 
 export default new Sequelize(
-	process.env.DB_NAME,
-	process.env.DB_USER,
-	process.env.DB_PASSWORD,
+	config.get('database.name'),
+	config.get('database.user'),
+	config.get('database.password'),
 	{
 		dialect: 'postgres',
-		host: process.env.DB_HOST,
-		port: parseInt(process.env.DB_PORT),
-		logging: process.env.DB_LOGGING.toLowerCase() === 'true'
+		host: config.get('database.host'),
+		port: config.get('database.port'),
+		logging: config.get('database.logging'),
 	}
 );
