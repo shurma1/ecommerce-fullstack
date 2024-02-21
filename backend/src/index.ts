@@ -10,7 +10,6 @@ import fileUpload from 'express-fileupload';
 import {devMiddleware} from './middleware/dev.middleware';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsDoc from 'swagger-jsdoc';
-import path from 'path';
 
 const PORT = config.get('server.port') || 8000;
 const UPLOAD_LIMIT = config.get('file.upload_limit') as number;
