@@ -1,7 +1,100 @@
 import {NextFunction, Request, Response} from 'express';
 import {TokenService, AuthService} from '../services';
 
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: User id
+ *         email:
+ *           type: string
+ *           description: User email
+ *         access_token:
+ *           type: string
+ *           description: access_token
+ *         refresh_token:
+ *           type: string
+ *           description: refresh_token
+ *       example:
+ *         id: b176c757-0779-459e-aea1-d3c97298c2a1
+ *         email: mail@example.com
+ *         access_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImIxNzZjNzU3LTA3NzktNDU5ZS1hZWExLWQzYzk3Mjk4YzJhYiIsImlhdCI6MTcwODQ5NTk0NCwiZXhwIjoxNzA4NDk5NTQ0fQ.ZO2VYtn_P6w6QwcFCTzpIjC-rZei-taaF-END3q7vHA
+ *         refresh_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImIxNzZjNzU3LTA3NzktNDU5ZS1hZWExLWQzYzk3Mjk4YzJhYiIsImlhdCI6MTcwODQ5NTk0NCwiZXhwIjoxNzExMDg3OTQ0fQ.92X5sPAKWVzN7mQy3PGUpbJ8fKn9rnLYHP01lxGePKk
+ */
+
+/**
+ * @swagger
+ * tags:
+ *   name: Auth
+ *   description: Auth API
+ */
+
 class AuthController{
+
+	/**
+	 * @swagger
+	 * /auth/singUp:
+	 *   post:
+	 *     summary: Register the user, return user and auth data
+	 *     tags: [Auth]
+	 *     parameters:
+	 *       - in: raw
+	 *         name: email
+	 *         schema:
+	 *           type: string
+	 *         required: true
+	 *         description: The user Email
+	 *
+	 *       - in: raw
+	 *         name: password
+	 *         schema:
+	 *           type: string
+	 *         required: true
+	 *         description: The user password. > 8 letters
+	 *
+	 *       - in: raw
+	 *         name: name
+	 *         schema:
+	 *           type: string
+	 *         required: true
+	 *         description: The user name. > 1 letters
+	 *
+	 *     responses:
+	 *       200:
+	 *         description: OK
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               $ref: '#/components/schemas/User'
+	 *       400-1:
+	 *         description: |
+	 *           EMAIL_INVALID:
+	 *             The specified email is invalid.
+	 *       400-2:
+	 *         description: |
+	 *           PASSWORD_INVALID:
+	 *             The password must contain at least 8 characters,
+	 *       400-3:
+	 *         description: |
+	 *           NAME_INVALID:
+	 *             The name must contain only letters,
+	 *       400-4:
+	 *         description: |
+	 *           NAME_LENGTH_INVALID:
+	 *             The name must be at least 2 letters long.
+	 *       400-5:
+	 *         description: |
+	 *           USER_ALREADY_EXISTS:
+	 *             The user with this email already exists.
+	 *
+	 */
+
 	async signUp(req: Request, res: Response, next: NextFunction){
 		try {
 			const {email, password, name} = req.body;
@@ -23,6 +116,50 @@ class AuthController{
 			next(e);
 		}
 	}
+
+
+
+	/**
+	 * @swagger
+	 * /auth/singIn:
+	 *   post:
+	 *     summary: Login the user, return user and auth data
+	 *     tags: [Auth]
+	 *     parameters:
+	 *       - in: path
+	 *         name: email
+	 *         schema:
+	 *           type: string
+	 *         required: true
+	 *         description: The user Email
+	 *
+	 *       - in: path
+	 *         name: password
+	 *         schema:
+	 *           type: string
+	 *         required: true
+	 *         description: The user password. > 8 letters
+	 *
+	 *     responses:
+	 *       200:
+	 *         description: OK
+	 *         content:
+	 *           application/json:
+	 *             schema:
+	 *               $ref: '#/components/schemas/User'
+	 *       400-1:
+	 *         description: |
+	 *           EMAIL_INVALID:
+	 *             The specified email is invalid.
+	 *       400-2:
+	 *         description: |
+	 *           PASSWORD_INVALID:
+	 *             The password must contain at least 8 characters.
+	 *       400-3:
+	 *         description: |
+	 *           USER_NOT_EXISTS:
+	 *             The email or password is incorrect.
+	 */
 
 	async signIn(req: Request, res: Response, next: NextFunction){
 		try{
