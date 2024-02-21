@@ -1,7 +1,9 @@
-import UserService from './auth.service';
+import AuthService from './auth.service';
 import TokenService from './token.service';
+import FileService from './file.service';
 
 export {
-	UserService,
-	TokenService
+	AuthService,
+	TokenService,
+	FileService
 };

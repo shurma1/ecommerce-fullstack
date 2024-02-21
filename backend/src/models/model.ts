@@ -11,8 +11,7 @@ import {CityInstance} from './types/City';
 import {MarketInstance} from './types/Market';
 import {ProductToMarketInstance} from './types/ProductToMarket';
 import {BrandTypeInstance} from './types/BrandType';
-import {PermissionToUserInstance} from './types/PermissionToUser';
-import {ImageInstance} from './types/Image';
+import {FileInstance} from './types/File';
 import {OrderInstance} from './types/Order';
 import {ProductToOrderInstance} from './types/ProductToOrder';
 import {BannerInstance} from './types/Banner';
@@ -65,12 +64,9 @@ const Permission = sequelize.define<PermissionInstance>('permission', {
 		defaultValue: DataTypes.UUIDV4,
 		allowNull: false
 	},
-	name: {
+	type: {
 		type: DataTypes.STRING,
 		allowNull: false
-	},
-	description: {
-		type: DataTypes.STRING
 	},
 });
 
@@ -200,16 +196,7 @@ const BardType = sequelize.define<BrandTypeInstance>('brand_type', {
 	},
 });
 
-const PermissionToUser = sequelize.define<PermissionToUserInstance>('permission_to_user', {
-	id: {
-		primaryKey: true,
-		type: DataTypes.UUID,
-		defaultValue: DataTypes.UUIDV4,
-		allowNull: false
-	},
-});
-
-const Image = sequelize.define<ImageInstance>('image', {
+const File = sequelize.define<FileInstance>('file', {
 	id: {
 		primaryKey: true,
 		type: DataTypes.UUID,
@@ -304,15 +291,14 @@ Product.belongsTo(Brand);
 Brand.belongsToMany(Type, {through: BardType});
 Type.belongsToMany(Brand, {through: BardType});
 
+User.hasMany(Permission);
+Permission.belongsTo(User);
 
-User.belongsToMany(Permission, {through: PermissionToUser});
-Permission.belongsToMany(User, {through: PermissionToUser});
-
-Image.hasMany(Type);
-Image.hasMany(Brand);
-Image.hasMany(Product);
-Image.hasMany(Banner, {as: 'backgroundBanners', foreignKey: 'backgroundImageId'});
-Image.hasMany(Banner, {as: 'contentBanners', foreignKey: 'contentImageId'});
+File.hasMany(Type);
+File.hasMany(Brand);
+File.hasMany(Product);
+File.hasMany(Banner, {as: 'backgroundBanners', foreignKey: 'backgroundImageId'});
+File.hasMany(Banner, {as: 'contentBanners', foreignKey: 'contentImageId'});
 
 User.hasMany(Order);
 Order.belongsTo(User);
@@ -333,9 +319,8 @@ export {
 	City,
 	Market,
 	ProductToMarket,
-	Image,
+	File,
 	Order,
 	ProductToOrder,
-	PermissionToUser,
 	Banner
 };

@@ -1,3 +1,5 @@
+import config from 'config';
+import {isDev} from '../isDev';
 
 export const enum LOGGER_STYLES {
     reset = '\x1b[0m',
@@ -33,33 +35,29 @@ const LogColors = {
 export class Logger {
 	//eslint-disable-next-line @typescript-eslint/no-explicit-any
 	static debug(...message: any){
-		if(! this.isDevelopment()) return;
+		if(! isDev) return;
 		if(! this.checkLoggingLevel(LogTypes.Debug)) return;
 		console.log(this.addPrefix(LogTypes.Debug), ...message);
 	}
 	//eslint-disable-next-line @typescript-eslint/no-explicit-any
 	static log(...message: any){
-		if(! this.isDevelopment()) return;
+		if(! isDev) return;
 		if(! this.checkLoggingLevel(LogTypes.Log)) return;
 		console.log(this.addPrefix(LogTypes.Log), ...message);
 	}
 	//eslint-disable-next-line @typescript-eslint/no-explicit-any
 	static warn(...message: any){
-		if(! this.isDevelopment()) return;
+		if(! isDev) return;
 		if(! this.checkLoggingLevel(LogTypes.Warning)) return;
 		console.log(this.addPrefix(LogTypes.Warning), ...message);
 	}
 	//eslint-disable-next-line @typescript-eslint/no-explicit-any
 	static error(...message: any){
-		if(! this.isDevelopment()) return;
+		if(! isDev) return;
 		if(! this.checkLoggingLevel(LogTypes.Error)) return;
 		console.log(this.addPrefix(LogTypes.Error), ...message);
 	}
 
-
-	private static isDevelopment(){
-		return !!process.argv.includes('--development');
-	}
 	private static getPrefix(logType: LogTypes): string {
 		for (const key in LogTypes) {
 			if (key === logType.toString()) {
@@ -89,7 +87,7 @@ export class Logger {
 	}
 
 	private static checkLoggingLevel(loggingLevel: LogTypes): boolean {
-		const environmentLoggingLevel: LogTypes = +(process.env.LOGGING_LEVEL || 0);
+		const environmentLoggingLevel: LogTypes = config.get('logging.level') || 0;
 		return loggingLevel <= environmentLoggingLevel;
 	}
 }
