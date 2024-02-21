@@ -1,0 +1,27 @@
+{
+  "logging": {
+    "level": 4
+  },
+  "server": {
+    "port": 8001
+  },
+  "database": {
+    "name": "ecommerce",
+    "user": "postgres",
+    "password": "root",
+    "host": "localhost",
+    "port": 5432,
+    "logging": false
+  },
+  "jwt": {
+    "access_secret": "1",
+    "access_expires": "1h",
+    "refresh_secret": "2",
+    "refresh_expires": "30d"
+  },
+  "file": {
+    "upload_limit": 5242880,
+    "allow_types": ["image/png", "image/jpeg", "image/jpg", "image/webp"]
+  },
+  "default_items_count": 20
+}
