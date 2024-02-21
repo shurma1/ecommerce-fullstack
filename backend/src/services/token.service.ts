@@ -1,10 +1,11 @@
 import jwt from 'jsonwebtoken';
 import {Token} from '../models/model';
 import {ApiError} from '../error/apiError';
+import config from 'config';
 
 
 interface IPayload {
-	id: number;
+	id: string;
 }
 
 
@@ -12,16 +13,16 @@ class TokenService{
 	generateTokens(payload: IPayload | object | Buffer){
 		const accessToken = jwt.sign(
 			payload,
-			process.env.JWT_ACCESS_SECRET,
+			config.get('jwt.access_secret'),
 			{
-				expiresIn: process.env.JWT_ACCESS_EXPIRES
+				expiresIn: config.get('jwt.access_expires'),
 			});
 
 		const refreshToken = jwt.sign(
 			payload,
-			process.env.JWT_REFRESH_SECRET,
+			config.get('jwt.refresh_secret'),
 			{
-				expiresIn: process.env.JWT_REFRESH_EXPIRES
+				expiresIn: config.get('jwt.refresh_expires'),
 			});
 
 		return{
@@ -30,10 +31,10 @@ class TokenService{
 		};
 	}
 
-	async saveToken(playerId: number, refreshToken: string, ip = 'none', browser = 'none') {
+	async saveToken(userId: string, refreshToken: string, ip = 'none', browser = 'none') {
 		const token = await Token.create({
 			token: refreshToken,
-			userId: playerId,
+			userId: userId,
 			ip: ip,
 			browser: browser
 		});
@@ -52,7 +53,7 @@ class TokenService{
 
 	validateAccessToken(token: string){
 		try{
-			const payload = jwt.verify(token, process.env.JWT_ACCESS_SECRET) as IPayload;
+			const payload = jwt.verify(token, config.get('jwt.access_secret')) as IPayload;
 			return payload;
 		}
 		catch {
@@ -62,7 +63,7 @@ class TokenService{
 
 	validateRefreshToken(token: string){
 		try{
-			const payload = jwt.verify(token, process.env.JWT_REFRESH_SECRET) as IPayload;
+			const payload = jwt.verify(token, config.get('jwt.refresh_secret')) as IPayload;
 			const isTokenExists = !!Token.findOne({where: {token}});
 			if(! isTokenExists){
 				throw new Error('Token not found');
