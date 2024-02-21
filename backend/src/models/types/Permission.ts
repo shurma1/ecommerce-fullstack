@@ -1,13 +1,13 @@
 import {Model} from 'sequelize';
 
 export interface PermissionCreationAttributes{
-	name: string;
-	description: string;
+	type: string;
+	userId: string
 }
 export interface PermissionAttributes{
 	id: string;
-	name: string;
-	description: string;
+	type: string;
+	userId?: string
 	createdAt?: Date;
 	updatedAt?: Date;
 }
