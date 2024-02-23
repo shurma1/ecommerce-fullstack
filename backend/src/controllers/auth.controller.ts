@@ -74,21 +74,33 @@ class AuthController{
 	 *               $ref: '#/components/schemas/User'
 	 *       400-1:
 	 *         description: |
-	 *           EMAIL_INVALID:
-	 *             The specified email is invalid.
+	 *           EMAIL_EMPTY:
+	 *             No email provided.
 	 *       400-2:
 	 *         description: |
-	 *           PASSWORD_INVALID:
-	 *             The password must contain at least 8 characters,
+	 *           EMAIL_INVALID:
+	 *             Invalid email format.
 	 *       400-3:
 	 *         description: |
-	 *           NAME_INVALID:
-	 *             The name must contain only letters,
+	 *           NAME_EMPTY:
+	 *             No name provided.
 	 *       400-4:
 	 *         description: |
-	 *           NAME_LENGTH_INVALID:
-	 *             The name must be at least 2 letters long.
+	 *           NAME_LENGTH_ERROR:
+	 *             The name must consist of a minimum 2 letters and maximum of 20.
 	 *       400-5:
+	 *         description: |
+	 *           NAME_INVALID:
+	 *             The name must contain only RU or EN letters.
+	 *       400-6:
+	 *         description: |
+	 *           PASSWORD_EMPTY:
+	 *             No password provided.
+	 *       400-7:
+	 *         description: |
+	 *           PASSWORD_LENGTH_INVALID:
+	 *             The password must consist of a minimum 8 symbols and a maximum of 100.
+	 *       400-8:
 	 *         description: |
 	 *           USER_ALREADY_EXISTS:
 	 *             The user with this email already exists.
@@ -99,7 +111,11 @@ class AuthController{
 		try {
 			const {email, password, name} = req.body;
 
-			const user = await AuthService.signUp(email, password, name);
+			const user = await AuthService.signUp({
+				email,
+				password,
+				name
+			});
 			const tokens = TokenService.generateTokens({id: user.id});
 			await TokenService.saveToken(user.id, tokens.refresh_token);
 
@@ -149,13 +165,21 @@ class AuthController{
 	 *               $ref: '#/components/schemas/User'
 	 *       400-1:
 	 *         description: |
-	 *           EMAIL_INVALID:
-	 *             The specified email is invalid.
+	 *           EMAIL_EMPTY:
+	 *             No email provided.
 	 *       400-2:
 	 *         description: |
-	 *           PASSWORD_INVALID:
-	 *             The password must contain at least 8 characters.
+	 *           EMAIL_INVALID:
+	 *             Invalid email format.
 	 *       400-3:
+	 *         description: |
+	 *           PASSWORD_EMPTY:
+	 *             No password provided.
+	 *       400-4:
+	 *         description: |
+	 *           PASSWORD_LENGTH_INVALID:
+	 *             The password must consist of a minimum 8 symbols and a maximum of 100.
+	 *       400-5:
 	 *         description: |
 	 *           USER_NOT_EXISTS:
 	 *             The email or password is incorrect.
@@ -165,7 +189,10 @@ class AuthController{
 		try{
 			const {email, password} = req.body;
 
-			const player = await AuthService.signIn(email, password);
+			const player = await AuthService.signIn({
+				email,
+				password
+			});
 			const tokens = TokenService.generateTokens({id: player.id});
 			await TokenService.saveToken(player.id, tokens.refresh_token);
 

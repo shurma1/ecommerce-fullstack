@@ -1,30 +1,17 @@
 import {ApiError} from '../error/apiError';
-import validator from 'validator';
 import {User} from '../models/model';
 import bcrypt from 'bcrypt';
+
+interface IUser {
+	email: string;
+	password: string;
+	name: string;
+}
+
 class AuthService {
 
-	async signUp(email: string, password: string, name: string) {
-		if(
-			typeof email !== 'string'
-			|| !validator.isEmail(email)
-		) {
-			throw ApiError.errorByType('EMAIL_INVALID');
-		}
-
-		if(!password || password.length <= 8) {
-			throw ApiError.errorByType('PASSWORD_INVALID');
-		}
-
-		const nameRegex = /^[a-zA-Zа-яА-Я]+$/;
-
-		if(typeof name !== 'string' || ! nameRegex.test(name)) {
-			throw ApiError.errorByType('NAME_INVALID');
-		}
-
-		if(name.length <= 1) {
-			throw ApiError.errorByType('NAME_LENGTH_INVALID');
-		}
+	async signUp(user: IUser) {
+		const {email, password, name} = user;
 
 		const isUserExist = !! await User.findOne({
 			where: {
@@ -38,36 +25,23 @@ class AuthService {
 
 		const hashPassword = await bcrypt.hash(password, 10);
 
-		const user =  await User.create({
+		return  await User.create({
 			name,
 			email,
 			password: hashPassword
 		});
-
-		return user;
-
 	}
 
-	async signIn(email: any, password: any){
-		if(
-			!email
-			|| typeof email !== 'string'
-			|| !validator.isEmail(email)
-		) {
-			throw ApiError.errorByType('EMAIL_INVALID');
-		}
+	async signIn(user: Omit<IUser, 'name'>){
+		const {email, password} = user;
 
-		if(!password || password.length <= 8) {
-			throw ApiError.errorByType('PASSWORD_INVALID');
-		}
-
-		const user = await User.findOne({
+		const userObject = await User.findOne({
 			where: {
 				email
 			}
 		});
 
-		if(! user) {
+		if(! userObject) {
 			throw ApiError.errorByType('USER_NOT_EXISTS');
 		}
 
@@ -77,8 +51,7 @@ class AuthService {
 			throw ApiError.errorByType('USER_NOT_EXISTS');
 		}
 
-
-		return user;
+		return userObject;
 	}
 
 }
