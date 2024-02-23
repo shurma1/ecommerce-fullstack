@@ -2,7 +2,7 @@ import {Model} from 'sequelize';
 
 export interface TypeCreationAttributes{
 	name: string;
-	imageId: string;
+	imageId?: string;
 }
 export interface TypeAttributes{
 	id: string;

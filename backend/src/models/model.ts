@@ -11,10 +11,10 @@ import {CityInstance} from './types/City';
 import {MarketInstance} from './types/Market';
 import {ProductToMarketInstance} from './types/ProductToMarket';
 import {BrandTypeInstance} from './types/BrandType';
-import {FileInstance} from './types/File';
 import {OrderInstance} from './types/Order';
 import {ProductToOrderInstance} from './types/ProductToOrder';
 import {BannerInstance} from './types/Banner';
+import {ImageInstance} from './types/Image';
 
 
 
@@ -49,7 +49,8 @@ const User = sequelize.define<UserInstance>('user', {
 	},
 	email: {
 		type: DataTypes.STRING,
-		allowNull: false
+		allowNull: false,
+		unique: true
 	},
 	password: {
 		type: DataTypes.STRING,
@@ -133,7 +134,9 @@ const Type = sequelize.define<TypeInstance>('type', {
 		allowNull: false
 	},
 	name: {
-		type: DataTypes.STRING
+		type: DataTypes.STRING,
+		unique: true,
+		allowNull: false
 	},
 });
 
@@ -145,7 +148,9 @@ const Brand = sequelize.define<BrandInstance>('brand', {
 		allowNull: false
 	},
 	name: {
-		type: DataTypes.STRING
+		type: DataTypes.STRING,
+		unique: true,
+		allowNull: false
 	},
 });
 
@@ -196,7 +201,7 @@ const BardType = sequelize.define<BrandTypeInstance>('brand_type', {
 	},
 });
 
-const File = sequelize.define<FileInstance>('file', {
+const Image = sequelize.define<ImageInstance>('image', {
 	id: {
 		primaryKey: true,
 		type: DataTypes.UUID,
@@ -294,11 +299,18 @@ Type.belongsToMany(Brand, {through: BardType});
 User.hasMany(Permission);
 Permission.belongsTo(User);
 
-File.hasMany(Type);
-File.hasMany(Brand);
-File.hasMany(Product);
-File.hasMany(Banner, {as: 'backgroundBanners', foreignKey: 'backgroundImageId'});
-File.hasMany(Banner, {as: 'contentBanners', foreignKey: 'contentImageId'});
+Image.hasMany(Type);
+Type.belongsTo(Image);
+
+Image.hasMany(Brand);
+Brand.belongsTo(Image);
+
+Image.hasMany(Product);
+Product.belongsTo(Image);
+
+Image.hasMany(Banner, {as: 'backgroundBanners', foreignKey: 'backgroundImageId'});
+Image.hasMany(Banner, {as: 'contentBanners', foreignKey: 'contentImageId'});
+
 
 User.hasMany(Order);
 Order.belongsTo(User);
@@ -319,7 +331,7 @@ export {
 	City,
 	Market,
 	ProductToMarket,
-	File,
+	Image,
 	Order,
 	ProductToOrder,
 	Banner
